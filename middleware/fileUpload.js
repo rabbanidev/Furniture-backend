@@ -42,13 +42,30 @@ const upload = multer({
   },
 });
 
-const cloudinaryImageUpload = async (image) => {
+const singleImageUpload = async (filePath) => {
   try {
-    const result = await cloudinary.v2.uploader.upload(image);
-    return result.secure_url;
+    const result = await cloudinary.v2.uploader.upload(filePath);
+    const image = { id: result.public_id, url: result.secure_url };
+    return image;
   } catch (error) {
     return error.message;
   }
 };
 
-export { upload, cloudinaryImageUpload };
+const multipleImageUpload = (files) => {
+  let res_promises = files.map(
+    (file) =>
+      new Promise((resolve, reject) => {
+        cloudinary.v2.uploader.upload(file.path, (error, result) => {
+          if (error) reject(error);
+          else {
+            const images = { id: result.public_id, url: result.secure_url };
+            resolve(images);
+          }
+        });
+      })
+  );
+  return Promise.all(res_promises);
+};
+
+export { upload, singleImageUpload, multipleImageUpload };
