@@ -53,7 +53,7 @@ const singleImageUpload = async (filePath) => {
 };
 
 const multipleImageUpload = (files) => {
-  let res_promises = files.map(
+  let resPromises = files.map(
     (file) =>
       new Promise((resolve, reject) => {
         cloudinary.v2.uploader.upload(file.path, (error, result) => {
@@ -65,7 +65,7 @@ const multipleImageUpload = (files) => {
         });
       })
   );
-  return Promise.all(res_promises);
+  return Promise.all(resPromises);
 };
 
 export { upload, singleImageUpload, multipleImageUpload };

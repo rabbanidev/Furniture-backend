@@ -23,10 +23,11 @@ const isLoggedIn = asyncHandler(async (req, res, next) => {
 });
 
 const isAdminRole = asyncHandler(async (req, res, next) => {
-  if (req.user.role !== process.env.ROLE) {
+  if (req.user.role === process.env.ROLE) {
+    next();
+  } else {
     res.status(403).send({ message: "Access deined" });
   }
-  next();
 });
 
 export { isLoggedIn, isAdminRole };
