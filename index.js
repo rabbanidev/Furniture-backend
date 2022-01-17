@@ -7,6 +7,7 @@ import { errorHandler, notFound } from "./middleware/error.js";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
+import orderRoutes from "./routes/order.js";
 
 dotenv.config();
 connectDB();
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api", authRoutes);
 app.use("/api", productRoutes);
+app.use("/api", orderRoutes);
 
 // Custom Error Handler
 app.use(notFound);
