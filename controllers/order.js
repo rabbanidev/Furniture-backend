@@ -48,10 +48,13 @@ const getOrderList = asyncHandler(async (req, res) => {
 
 const getOrderById = asyncHandler(async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate(
+      "user",
+      "fullName email role"
+    );
     if (
       (order && order.user === req.user.id) ||
-      req.user.role === process.env.ROLE
+      (order && req.user.role === process.env.ROLE)
     ) {
       res.status(200).send(order);
     } else {
@@ -64,7 +67,10 @@ const getOrderById = asyncHandler(async (req, res) => {
 
 const getMyOrder = asyncHandler(async (req, res) => {
   try {
-    const orderList = await Order.find({ user: req.user.id });
+    const orderList = await Order.find({ user: req.user.id }).populate(
+      "user",
+      "fullName email role"
+    );
     if (orderList.length > 0) {
       res.status(200).send(orderList);
     } else {
@@ -77,8 +83,22 @@ const getMyOrder = asyncHandler(async (req, res) => {
 
 const individualUserOrder = asyncHandler(async (req, res) => {
   try {
-    const orderList = await Order.find({ user: req.params.userId });
+    const orderList = await Order.find({ user: req.params.userId }).populate(
+      "user",
+      "fullName email role"
+    );
     res.status(200).send(orderList);
+  } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
+});
+
+const updateOrder = asyncHandler(async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    order.orderStatus.type = req.body.type;
+    await order.save();
+    res.status(201).send({ message: "Order updated successfully" });
   } catch (error) {
     res.status(400).send({ message: error.message });
   }
@@ -90,4 +110,5 @@ export {
   getOrderById,
   getMyOrder,
   individualUserOrder,
+  updateOrder,
 };

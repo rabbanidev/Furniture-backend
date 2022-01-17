@@ -5,6 +5,7 @@ import {
   getOrderById,
   getOrderList,
   individualUserOrder,
+  updateOrder,
 } from "../controllers/order.js";
 import { isAdminRole, isLoggedIn } from "../middleware/userCheck.js";
 
@@ -16,5 +17,6 @@ router.get("/order-list/my-order", isLoggedIn, getMyOrder);
 // Admin Route
 router.get("/order-list", isLoggedIn, isAdminRole, getOrderList);
 router.get("/order-list/:userId", isLoggedIn, isAdminRole, individualUserOrder);
+router.post("/order/update/:id", isLoggedIn, isAdminRole, updateOrder);
 
 export default router;
