@@ -34,7 +34,7 @@ const signin = asyncHandler(async (req, res) => {
   if (user) {
     const matchPassword = await bcrypt.compare(password, user.password);
     if (matchPassword) {
-      res.status(201).send({
+      res.status(200).send({
         token: generateToken(user._id),
         userInfo: {
           id: user._id,
@@ -54,4 +54,15 @@ const signin = asyncHandler(async (req, res) => {
   }
 });
 
-export { signup, signin };
+const userInfo = asyncHandler(async (req, res) => {
+  try {
+    const userInfo = await Auth.findById(req.user.id).select(
+      "fullName email avater role"
+    );
+    res.status(200).send(userInfo);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+export { signup, signin, userInfo };

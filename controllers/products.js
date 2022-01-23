@@ -10,7 +10,7 @@ const getProductList = asyncHandler(async (req, res) => {
     );
     res.status(200).send(productList);
   } catch (error) {
-    res.status(400).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
@@ -22,7 +22,7 @@ const typeProductList = asyncHandler(async (req, res) => {
     );
     res.status(200).send(productList);
   } catch (error) {
-    res.status(400).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
@@ -38,59 +38,29 @@ const getProductById = asyncHandler(async (req, res) => {
       res.status(404).send({ message: "Product not found" });
     }
   } catch (error) {
-    res.status(400).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
-const addEditProduct = asyncHandler(async (req, res) => {
-  const {
-    id,
-    name,
-    type,
-    oldPrice,
-    newPrice,
-    isNew,
-    inStock,
-    outStock,
-    title,
-    setincludes,
-    shortDes,
-    information,
-    description,
-  } = req.body;
-  const { id: userId, role } = req.user;
-  const user = { userId, role };
-
-  if (id) {
-    try {
-      const product = await Product.findById(id);
-      if (product) {
-        const images = await multipleImageUpload(req.files);
-        product.user = user;
-        product.name = name;
-        product.type = type;
-        product.oldPrice = oldPrice;
-        product.newPrice = newPrice;
-        product.discount = discountFunction(oldPrice, newPrice);
-        product.isNew = isNew;
-        product.inStock = inStock;
-        product.outStock = outStock;
-        product.title = title;
-        product.setincludes = setincludes;
-        product.shortDes = shortDes;
-        product.information = information;
-        product.description = description;
-        product.images = images;
-        await product.save();
-        res.status(201).send({ message: "Product update successfully" });
-      } else {
-        res.status(404).send({ message: "Product not found" });
-      }
-    } catch (error) {
-      res.status(400).send({ message: error.message });
-    }
-  } else {
-    try {
+const addProduct = asyncHandler(async (req, res) => {
+  try {
+    const {
+      name,
+      type,
+      oldPrice,
+      newPrice,
+      isNew,
+      inStock,
+      outStock,
+      title,
+      setincludes,
+      shortDes,
+      information,
+      description,
+    } = req.body;
+    const { id: userId, role } = req.user;
+    const user = { userId, role };
+    if (req.files.length > 0) {
       const images = await multipleImageUpload(req.files);
       const productObj = {
         user,
@@ -111,9 +81,57 @@ const addEditProduct = asyncHandler(async (req, res) => {
       };
       await Product.create(productObj);
       res.status(201).send({ message: "Product created successfully" });
-    } catch (error) {
-      res.status(400).send({ message: error.message });
+    } else {
+      res.status(400).send({ message: "Product images not found" });
     }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+const editProduct = asyncHandler(async (req, res) => {
+  try {
+    const {
+      name,
+      type,
+      oldPrice,
+      newPrice,
+      isNew,
+      inStock,
+      outStock,
+      title,
+      setincludes,
+      shortDes,
+      information,
+      description,
+    } = req.body;
+    const { id: userId, role } = req.user;
+    const user = { userId, role };
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      const images = await multipleImageUpload(req.files);
+      product.user = user;
+      product.name = name;
+      product.type = type;
+      product.oldPrice = oldPrice;
+      product.newPrice = newPrice;
+      product.discount = discountFunction(oldPrice, newPrice);
+      product.isNew = isNew;
+      product.inStock = inStock;
+      product.outStock = outStock;
+      product.title = title;
+      product.setincludes = setincludes;
+      product.shortDes = shortDes;
+      product.information = information;
+      product.description = description;
+      product.images = images;
+      await product.save();
+      res.status(204).send({ message: "Product update successfully" });
+    } else {
+      res.status(404).send({ message: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
   }
 });
 
@@ -128,7 +146,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
       res.status(404).send({ message: "Product not found" });
     }
   } catch (error) {
-    res.status(400).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
@@ -136,6 +154,7 @@ export {
   getProductList,
   typeProductList,
   getProductById,
-  addEditProduct,
+  addProduct,
+  editProduct,
   deleteProduct,
 };

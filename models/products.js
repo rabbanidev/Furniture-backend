@@ -62,10 +62,6 @@ const schema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    outStock: {
-      type: Boolean,
-      default: false,
-    },
     title: {
       type: String,
       required: true,
@@ -79,7 +75,6 @@ const schema = mongoose.Schema(
     information: {
       shipping: {
         type: String,
-        required: true,
       },
       sizeing: {
         type: String,
