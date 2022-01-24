@@ -1,6 +1,9 @@
 import multer from "multer";
+import dotenv from "dotenv";
 import path from "path";
 import cloudinary from "cloudinary";
+
+dotenv.config();
 
 cloudinary.config({
   cloud_name: "dirz3oect",
@@ -12,7 +15,7 @@ const __dirname = path.resolve();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "/uploads"));
+    cb(null, path.join(__dirname, `./${process.env.UPLOAD}`));
   },
   filename: (req, file, cb) => {
     const extensionName = path.extname(file.originalname);
