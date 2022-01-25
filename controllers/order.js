@@ -136,8 +136,8 @@ const updateOrder = asyncHandler(async (req, res) => {
       }
     );
     // console.log(order);
-    // // order.orderStatus.type = req.body.type;
-    // // await order.save();
+    // order.orderStatus.type = req.body.type;
+    // await order.save();
     res.status(202).send({ message: "Order updated successfully" });
   } catch (error) {
     res.status(500).send({ message: error.message });
