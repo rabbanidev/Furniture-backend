@@ -61,13 +61,22 @@ const schema = mongoose.Schema(
       enum: ["cod", "card"],
       default: "cod",
     },
-    orderStatus: {
-      type: {
-        type: String,
-        enum: ["ordered", "packed", "shipped", "delivered"],
-        default: "ordered",
+    orderStatus: [
+      {
+        type: {
+          type: String,
+          enum: ["ordered", "packed", "shipped", "delivered"],
+          default: "ordered",
+        },
+        complete: {
+          type: Boolean,
+          default: false,
+        },
+        date: {
+          type: Date,
+        },
       },
-    },
+    ],
   },
   { timestamps: true }
 );
