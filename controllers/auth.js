@@ -65,4 +65,35 @@ const userInfo = asyncHandler(async (req, res) => {
   }
 });
 
-export { signup, signin, userInfo };
+const getUserList = asyncHandler(async (req, res) => {
+  try {
+    const userList = await Auth.find({}).select("fullName email avater role");
+    res.status(200).send(userList);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+  try {
+    const user = await Auth.findById(req.params.id).select(
+      "fullName email avater role"
+    );
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+const updateUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await Auth.findById(req.params.id);
+    user.role = req.body.role;
+    user.save();
+    res.status(204).send({ message: "Update successfully" });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+export { signup, signin, userInfo, getUserList, getUserById, updateUser };

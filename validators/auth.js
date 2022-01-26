@@ -4,7 +4,7 @@ const validateSignupRequest = [
   check("fullName").notEmpty().withMessage("Fullname is required"),
   check("email").notEmpty().withMessage("Email is required"),
   check("password")
-    .isLength({ min: 8, max: 16 })
+    .isLength({ min: 6, max: 16 })
     .withMessage(
       "Password must be at least 8 characters and less than 16 characters"
     ),
@@ -13,7 +13,7 @@ const validateSignupRequest = [
 const validateSigninRequest = [
   check("email").notEmpty().withMessage("Email is required"),
   check("password")
-    .isLength({ min: 8, max: 16 })
+    .isLength({ min: 6, max: 16 })
     .withMessage(
       "Password must be at least 8 characters and less than 16 characters"
     ),
@@ -23,7 +23,7 @@ const isValidateRequest = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.array().length > 0) {
     return res.status(400).json({
-      message:errors.array()[0].msg,
+      message: errors.array()[0].msg,
     });
   }
   next();
