@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import { ObjectId } from "mongodb";
 import Order from "../models/order.js";
 
 const addOrder = asyncHandler(async (req, res) => {
@@ -78,11 +79,14 @@ const getOrderById = asyncHandler(async (req, res) => {
         "orderItems.product",
         "name type oldPrice newPrice discount images"
       );
-    if (
-      (order && order.user === req.user.id) ||
-      (order && req.user.role === process.env.ROLE)
-    ) {
-      res.status(200).send(order);
+    if (order) {
+      if (ObjectId(order.user._id).valueOf() === req.user.id) {
+        res.status(200).send(order);
+      } else if (req.user.role === process.env.ROLE) {
+        res.status(200).send(order);
+      } else {
+        res.status(400).send({ message: "Access denied." });
+      }
     } else {
       res.status(404).send({ message: "Order not found" });
     }
@@ -99,11 +103,7 @@ const getMyOrder = asyncHandler(async (req, res) => {
         "orderItems.product",
         "name type oldPrice newPrice discount images"
       );
-    if (orderList.length > 0) {
-      res.status(200).send(orderList);
-    } else {
-      res.status(404).send({ message: "Your order empty." });
-    }
+    res.status(200).send(orderList);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -135,9 +135,6 @@ const updateOrder = asyncHandler(async (req, res) => {
         },
       }
     );
-    // console.log(order);
-    // order.orderStatus.type = req.body.type;
-    // await order.save();
     res.status(202).send({ message: "Order updated successfully" });
   } catch (error) {
     res.status(500).send({ message: error.message });
