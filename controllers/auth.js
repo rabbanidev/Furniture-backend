@@ -59,7 +59,11 @@ const userInfo = asyncHandler(async (req, res) => {
     const userInfo = await Auth.findById(req.user.id).select(
       "fullName email avater role"
     );
-    res.status(200).send(userInfo);
+    if (userInfo) {
+      res.status(200).send(userInfo);
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -79,7 +83,43 @@ const getUserById = asyncHandler(async (req, res) => {
     const user = await Auth.findById(req.params.id).select(
       "fullName email avater role"
     );
-    res.status(200).send(user);
+    if (user) {
+      res.status(200).send(user);
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+const getUserAddress = asyncHandler(async (req, res) => {
+  try {
+    const userInfo = await Auth.findById(req.user.id).select(
+      "billingDetails shippingAddress"
+    );
+    if (userInfo) {
+      res.status(200).send(userInfo);
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+const userAddress = asyncHandler(async (req, res) => {
+  try {
+    const { billingDetails, shippingAddress } = req.body;
+    const user = await Auth.findById(req.user.id);
+    if (user) {
+      user.billingDetails = billingDetails;
+      user.shippingAddress = shippingAddress;
+      user.save();
+      res.status(204).send({ message: "Update successfully" });
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -88,12 +128,25 @@ const getUserById = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   try {
     const user = await Auth.findById(req.params.id);
-    user.role = req.body.role;
-    user.save();
-    res.status(204).send({ message: "Update successfully" });
+    if (user) {
+      user.role = req.body.role;
+      user.save();
+      res.status(204).send({ message: "Update successfully" });
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
 
-export { signup, signin, userInfo, getUserList, getUserById, updateUser };
+export {
+  signup,
+  signin,
+  userInfo,
+  getUserList,
+  getUserAddress,
+  getUserById,
+  userAddress,
+  updateUser,
+};

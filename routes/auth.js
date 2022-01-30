@@ -1,10 +1,12 @@
 import express from "express";
 import {
+  getUserAddress,
   getUserById,
   getUserList,
   signin,
   signup,
   updateUser,
+  userAddress,
   userInfo,
 } from "../controllers/auth.js";
 import { isAdminRole, isLoggedIn } from "../middleware/userCheck.js";
@@ -21,6 +23,8 @@ router.post("/auth/signin", validateSigninRequest, isValidateRequest, signin);
 router.get("/userinfo", isLoggedIn, userInfo);
 router.get("/user/:id", isLoggedIn, getUserById);
 router.get("/user-list", isLoggedIn, isAdminRole, getUserList);
+router.get("/user-address-book", isLoggedIn, getUserAddress);
+router.post("/user/address-book/add", isLoggedIn, userAddress);
 router.post("/user/edit/:id", isLoggedIn, isAdminRole, updateUser);
 
 export default router;
