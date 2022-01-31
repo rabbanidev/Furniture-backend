@@ -55,9 +55,18 @@ const addProduct = asyncHandler(async (req, res) => {
       title,
       setincludes,
       shortDes,
-      information,
+      shipping,
+      sizeing,
+      assistance,
+      storeMail,
       description,
     } = req.body;
+    const information = {
+      shipping,
+      sizeing,
+      assistance,
+      storeMail,
+    };
     const { id: userId, role } = req.user;
     const user = { userId, role };
     if (req.files.length > 0) {
@@ -102,9 +111,18 @@ const editProduct = asyncHandler(async (req, res) => {
       title,
       setincludes,
       shortDes,
-      information,
+      shipping,
+      sizeing,
+      assistance,
+      storeMail,
       description,
     } = req.body;
+    const information = {
+      shipping,
+      sizeing,
+      assistance,
+      storeMail,
+    };
     const { id: userId, role } = req.user;
     const user = { userId, role };
     const product = await Product.findById(req.params.id);
