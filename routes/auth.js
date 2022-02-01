@@ -5,6 +5,7 @@ import {
   getUserList,
   signin,
   signup,
+  updatePassword,
   updateUser,
   userAddress,
   userInfo,
@@ -24,6 +25,8 @@ router.get("/userinfo", isLoggedIn, userInfo);
 router.get("/user/:id", isLoggedIn, getUserById);
 router.get("/user-list", isLoggedIn, isAdminRole, getUserList);
 router.get("/user-address-book", isLoggedIn, getUserAddress);
+router.post("/user/update-password", isLoggedIn, updatePassword);
+
 router.post("/user/address-book/add", isLoggedIn, userAddress);
 router.post("/user/edit/:id", isLoggedIn, isAdminRole, updateUser);
 

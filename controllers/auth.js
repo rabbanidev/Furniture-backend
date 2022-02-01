@@ -95,11 +95,32 @@ const getUserById = asyncHandler(async (req, res) => {
 
 const getUserAddress = asyncHandler(async (req, res) => {
   try {
-    const userInfo = await Auth.findById(req.user.id).select(
+    const user = await Auth.findById(req.user.id).select(
       "billingDetails shippingAddress"
     );
-    if (userInfo) {
-      res.status(200).send(userInfo);
+    if (user) {
+      res.status(200).send(user);
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+const updatePassword = asyncHandler(async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const user = await Auth.findById(req.user.id);
+    if (user) {
+      const matchPassword = await bcrypt.compare(oldPassword, user.password);
+      if (matchPassword) {
+        user.password = newPassword;
+        user.save();
+        res.status(204).send({ message: "Password changed successfully." });
+      } else {
+        res.status(400).send({ message: "Current password is wrong" });
+      }
     } else {
       res.status(404).send({ message: "User not found" });
     }
@@ -147,6 +168,7 @@ export {
   getUserList,
   getUserAddress,
   getUserById,
+  updatePassword,
   userAddress,
   updateUser,
 };
