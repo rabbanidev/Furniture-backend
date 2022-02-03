@@ -1,27 +1,5 @@
 import mongoose from "mongoose";
 
-const reviewSchema = mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    rating: { type: Number, required: true },
-    comment: { type: String, required: true },
-    image: { type: String, required: true },
-    user: {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Auth",
-      },
-      role: {
-        type: String,
-        required: true,
-        enum: ["user"],
-      },
-    },
-  },
-  { timestamps: true }
-);
-
 const schema = mongoose.Schema(
   {
     user: {
@@ -29,10 +7,6 @@ const schema = mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Auth",
-      },
-      role: {
-        type: String,
-        required: true,
       },
     },
     name: {
@@ -45,18 +19,17 @@ const schema = mongoose.Schema(
     },
     oldPrice: {
       type: Number,
+      required: true,
+      default: 0,
     },
     newPrice: {
       type: Number,
       required: true,
+      default: 0,
     },
     discount: {
       type: String,
     },
-    // isNew: {
-    //   type: Boolean,
-    //   default: false,
-    // },
     inStock: {
       type: Boolean,
       default: true,
@@ -67,26 +40,33 @@ const schema = mongoose.Schema(
     },
     setincludes: {
       type: String,
+      default: "",
     },
     shortDes: {
       type: Array,
+      default: [],
     },
     information: {
       shipping: {
         type: String,
+        default: "",
       },
       sizeing: {
         type: String,
+        default: "",
       },
       assistance: {
         type: String,
+        default: "",
       },
       storeMail: {
         type: String,
+        default: "",
       },
     },
     description: {
       type: String,
+      default: "",
     },
     images: [
       {
@@ -94,7 +74,7 @@ const schema = mongoose.Schema(
         url: { type: String, required: true },
       },
     ],
-    reviews: [reviewSchema],
+    banner: { type: String, required: true },
   },
   { timestamps: true }
 );
