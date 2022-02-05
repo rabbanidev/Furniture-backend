@@ -8,7 +8,14 @@ import Product from "../models/products.js";
 
 const getProductList = asyncHandler(async (req, res) => {
   try {
-    const productList = await Product.find({}).select(
+    const { name } = req.query;
+    const searchQuery = name
+      ? {
+          name: { $regex: name, $options: "$i" },
+        }
+      : {};
+
+    const productList = await Product.find({ ...searchQuery }).select(
       "name type oldPrice newPrice discount inStock outStock title setincludes shortDes information description images banner"
     );
     res.status(200).send(productList);
