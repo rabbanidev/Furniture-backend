@@ -21,7 +21,8 @@ const schema = mongoose.Schema(
     avater: {
       type: String,
       required: true,
-      default: "https://image.flaticon.com/icons/png/512/149/149071.png",
+      default:
+        "https://upload.wikimedia.org/wikipedia/commons/5/59/User-avatar.svg",
     },
     role: {
       type: String,
